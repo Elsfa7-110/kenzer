@@ -5,10 +5,14 @@ import os
 class Enumerator:
     
     #initializations
-    def __init__(self, domain, db, kenzer, github=""):
+    def __init__(self, domain, db, kenzer, dtype, github=""):
         self.domain = domain
         self.organization = domain
-        self.path = db+self.organization
+        self.dtype = dtype        
+        if dtype:
+            self.path = db+self.organization
+        else:
+            self.path = db+self.organization.replace("/","-")
         self.resources = kenzer+"resources"
         self.githubapi=github
         self.templates = self.resources+"/kenzer-templates/"
@@ -176,14 +180,19 @@ class Enumerator:
         domain = self.domain
         path = self.path
         subs = path+"/subenum.kenz"
-        if(os.path.exists(subs) == False):
-            return("!subenum")
-        self.shuffsolv(subs, domain)
+        dtype = self.dtype
         output = path+"/portenum.kenz"
-        subs = path+"/shuffsolv.log"
         if(os.path.exists(output)):
-            os.system("mv {0} {0}.old".format(output))
-        os.system("sudo NXScan --only-enumerate -l {0} -o {1}".format(subs,path+"/nxscan"))
+                os.system("mv {0} {0}.old".format(output))
+        if dtype:
+            if(os.path.exists(subs) == False):
+                return("!subenum")
+            self.shuffsolv(subs, domain)
+            subs = path+"/shuffsolv.log"
+            os.system("sudo NXScan --only-enumerate -l {0} -o {1}".format(subs,path+"/nxscan"))
+        else:
+            os.system("echo {0} > {1}".format(domain, subs))
+            os.system("sudo NXScan --only-enumerate -l {0} -o {1}".format(subs,path+"/nxscan"))
         os.system("cat {0}/nxscan/enum.txt {0}/portenum.kenz* | sort -u > {1}".format(path, output))
         self.ignorenum()
         if(os.path.exists(output)):
