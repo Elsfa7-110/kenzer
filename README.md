@@ -30,7 +30,7 @@
 >* `webenum` - enumerates webservers
 >* `headenum` - enumerates additional info from webservers
 >* `urlheadenum` - enumerates additional info from urls
->* `asnenum` - enumerates asn
+>* `asnenum` - enumerates asn records
 >* `dnsenum` - enumerates dns records
 >* `conenum` - enumerates hidden files & directories
 >* `urlenum` - enumerates urls

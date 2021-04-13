@@ -94,7 +94,7 @@ class Kenzer(object):
         message +="  `urlheadenum` - enumerates additional info from urls\n"
         message +="  `conenum` - enumerates hidden files & directories\n"
         message +="  `dnsenum` - enumerates dns records\n"
-        message +="  `asnenum` - enumerates asn\n"
+        message +="  `asnenum` - enumerates asn records\n"
         message +="  `urlenum` - enumerates urls\n"
         message +="  `subscan` - hunts for subdomain takeovers\n"
         message +="  `socenum` - enumerates social media accounts\n"

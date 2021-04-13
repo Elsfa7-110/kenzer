@@ -12,7 +12,7 @@ class Scanner:
         if dtype:
             self.path = db+self.organization
         else:
-            self.path = db+self.organization.replace("/","-")
+            self.path = db+self.organization.replace("/","#")
         self.resources = kenzer+"resources/"
         self.templates = self.resources+"kenzer-templates/"
         if(os.path.exists(self.path) == False):

@@ -12,7 +12,7 @@ class Enumerator:
         if dtype:
             self.path = db+self.organization
         else:
-            self.path = db+self.organization.replace("/","-")
+            self.path = db+self.organization.replace("/","#")
         self.resources = kenzer+"resources"
         self.githubapi=github
         self.templates = self.resources+"/kenzer-templates/"
@@ -193,6 +193,7 @@ class Enumerator:
         else:
             os.system("echo {0} > {1}".format(domain, subs))
             os.system("sudo NXScan --only-enumerate -l {0} -o {1}".format(subs,path+"/nxscan"))
+            os.system("rm {0}".format(subs))
         os.system("cat {0}/nxscan/enum.txt {0}/portenum.kenz* | sort -u > {1}".format(path, output))
         self.ignorenum()
         if(os.path.exists(output)):
