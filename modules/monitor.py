@@ -22,7 +22,7 @@ class Monitor:
         path = self.path
         output = path+"/subenum.kenz"
         if len(domains)==0:
-            os.system("certex -f {0} -o {1} &".format(self.db+"../domains.txt", output))
+            os.system("certex -f {0} -o {1} &".format(self.db+"../targets.txt", output))
         else:
             os.system("certex -d {0} -o {1} &".format(domains, output))
         return
