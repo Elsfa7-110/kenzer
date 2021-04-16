@@ -51,7 +51,7 @@ class Kenzer(object):
     
     #initializations
     def __init__(self):
-        print(BLUE+"KENZER[3.16] by ARPSyndicate"+CLEAR)
+        print(BLUE+"KENZER[3.17] by ARPSyndicate"+CLEAR)
         print(YELLOW+"automated web assets enumeration & scanning"+CLEAR)
         self.client = zulip.Client(email=_BotMail, site=_Site, api_key=_APIKey)
         self.upload=False
@@ -83,7 +83,7 @@ class Kenzer(object):
 
     #manual
     def man(self):
-        message = "**KENZER[3.16]**\n"
+        message = "**KENZER[3.17]**\n"
         message +="**KENZER modules**\n"
         message +="  `ignorenum` - initializes & removes out of scope targets\n"
         message +="  `subenum` - enumerates subdomains\n"

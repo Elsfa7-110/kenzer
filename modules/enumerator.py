@@ -299,10 +299,10 @@ class Enumerator:
         path=self.path + "/shuffsolv.1.log"
         if(os.path.exists(path)):
             os.system("rm {0}".format(path))
-        os.system("shuffledns -strict-wildcard -retries 6 -wt 20 -r {3}/resolvers.txt -o {0} -v -list {1} -d {2}".format(path, domains, domain,self.resources))
+        os.system("shuffledns -strict-wildcard -retries 5 -wt 20 -r {3}/resolvers.txt -o {0} -v -list {1} -d {2}".format(path, domains, domain,self.resources))
         oldp = path
         path = self.path+"/shuffsolv.log"
-        os.system("shuffledns -strict-wildcard -retries 6 -wt 20 -r {3}/resolvers.txt -o {0} -v -list {1} -d {2}".format(path, oldp, domain,self.resources))
+        os.system("shuffledns -strict-wildcard -retries 5 -wt 20 -r {3}/resolvers.txt -o {0} -v -list {1} -d {2}".format(path, oldp, domain,self.resources))
         os.system("rm "+oldp)
         return
 
@@ -314,7 +314,7 @@ class Enumerator:
         output = path+"/subfinder.log"
         if(os.path.exists(output)):
             os.system("mv {0} {0}.old".format(output))
-        os.system("subfinder -all -recursive -t 50 -max-time 20 -o {0} -v -timeout 20 -d {1}".format(output, domain))
+        os.system("subfinder -all -recursive -t 50 -max-time 30 -o {0} -v -timeout 20 -d {1}".format(output, domain))
         return
     
     #enumerates subdomains using amass
@@ -324,7 +324,7 @@ class Enumerator:
         output = path+"/amass.log"
         if(os.path.exists(output)):
             os.system("mv {0} {0}.old".format(output))
-        os.system("amass enum -o {0} -d {1} -norecursive -noalts -active -nolocaldb".format(output, domain))
+        os.system("amass enum -o {0} -d {1} -norecursive -noalts -nolocaldb".format(output, domain))
         return
 
     #enumerates subdomains using shuffledns
@@ -337,7 +337,7 @@ class Enumerator:
         output = path+"/shuffledns.log"
         if(os.path.exists(output)):
             os.system("rm {0}".format(output))
-        os.system("shuffledns -retries 6 -strict-wildcard -wt 30 -r {2}/resolvers.txt -w {2}/subdomains.txt -o {0} -v -d {1}".format(output, domain, self.resources))
+        os.system("shuffledns -retries 5 -strict-wildcard -wt 30 -r {2}/resolvers.txt -w {2}/subdomains.txt -o {0} -v -d {1}".format(output, domain, self.resources))
         self.shuffsolv(output, domain)
         os.system("rm {0} && mv {1} {0}".format(output, path+"/shuffsolv.log"))
         return 
