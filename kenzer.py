@@ -51,7 +51,7 @@ class Kenzer(object):
     
     #initializations
     def __init__(self):
-        print(BLUE+"KENZER[3.17] by ARPSyndicate"+CLEAR)
+        print(BLUE+"KENZER[3.18] by ARPSyndicate"+CLEAR)
         print(YELLOW+"automated web assets enumeration & scanning"+CLEAR)
         self.client = zulip.Client(email=_BotMail, site=_Site, api_key=_APIKey)
         self.upload=False
@@ -83,7 +83,7 @@ class Kenzer(object):
 
     #manual
     def man(self):
-        message = "**KENZER[3.17]**\n"
+        message = "**KENZER[3.18]**\n"
         message +="**KENZER modules**\n"
         message +="  `ignorenum` - initializes & removes out of scope targets\n"
         message +="  `subenum` - enumerates subdomains\n"
@@ -190,7 +190,7 @@ class Kenzer(object):
     def ignorenum(self):
         for i in range(2,len(self.content)):
             dtype = True
-            if(validators.domain(self.content[i].lower())!= True and self.content[i].lower() != "monitor"):
+            if(validators.domain(self.content[i].lower())!= True):
                 self.sendMessage("[invalid] {0}".format(self.content[i].lower()))
                 continue
             extracted = tldextract.extract(self.content[i].lower())
@@ -208,7 +208,7 @@ class Kenzer(object):
     def subenum(self):
         for i in range(2,len(self.content)):
             dtype = True
-            if(validators.domain(self.content[i].lower())!= True and self.content[i].lower() != "monitor"):
+            if(validators.domain(self.content[i].lower())!= True):
                 self.sendMessage("[invalid] {0}".format(self.content[i].lower()))
                 continue
             self.sendMessage("[subenum - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
@@ -287,7 +287,7 @@ class Kenzer(object):
     def urlheadenum(self):
         for i in range(2,len(self.content)):
             dtype = True
-            if(validators.domain(self.content[i].lower())!= True and self.content[i].lower() != "monitor"):
+            if(validators.domain(self.content[i].lower())!= True):
                 self.sendMessage("[invalid] {0}".format(self.content[i].lower()))
                 continue
             self.sendMessage("[urlheadenum - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
@@ -319,7 +319,7 @@ class Kenzer(object):
     def conenum(self):
         for i in range(2,len(self.content)):
             dtype = False
-            if validators.domain(self.content[i].lower())==True or self.content[i].lower() == "monitor":
+            if validators.domain(self.content[i].lower())==True:
                 dtype = True
             else:
                 try:
@@ -377,7 +377,7 @@ class Kenzer(object):
     def urlenum(self):
         for i in range(2,len(self.content)):
             dtype = True
-            if(validators.domain(self.content[i].lower())!= True and self.content[i].lower() != "monitor"):
+            if(validators.domain(self.content[i].lower())!= True):
                 self.sendMessage("[invalid] {0}".format(self.content[i].lower()))
                 continue
             self.sendMessage("[urlenum - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
@@ -413,10 +413,15 @@ class Kenzer(object):
     #enumerates social media accounts 
     def socenum(self):
         for i in range(2,len(self.content)):
-            dtype = True
-            if(validators.domain(self.content[i].lower())!= True and self.content[i].lower() != "monitor"):
-                self.sendMessage("[invalid] {0}".format(self.content[i].lower()))
-                continue
+            dtype = False
+            if validators.domain(self.content[i].lower())==True:
+                dtype = True
+            else:
+                try:
+                    ipaddress.ip_network(self.content[i])
+                except ValueError:
+                    self.sendMessage("[invalid] {0}".format(self.content[i].lower()))    
+                    continue
             self.sendMessage("[socenum - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
             self.enum = enumerator.Enumerator(self.content[i].lower(), _kenzerdb, _kenzer, dtype)
             message = self.enum.socenum()
@@ -493,7 +498,7 @@ class Kenzer(object):
     def urlcvescan(self):
         for i in range(2,len(self.content)):
             dtype = True
-            if(validators.domain(self.content[i].lower())!= True and self.content[i].lower() != "monitor"):
+            if(validators.domain(self.content[i].lower())!= True):
                 self.sendMessage("[invalid] {0}".format(self.content[i].lower()))
                 continue
             self.sendMessage("[urlcvescan - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
@@ -509,7 +514,7 @@ class Kenzer(object):
     def urlvulnscan(self):
         for i in range(2,len(self.content)):
             dtype = True
-            if(validators.domain(self.content[i].lower())!= True and self.content[i].lower() != "monitor"):
+            if(validators.domain(self.content[i].lower())!= True):
                 self.sendMessage("[invalid] {0}".format(self.content[i].lower()))
                 continue
             self.sendMessage("[urlvulnscan - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
@@ -525,7 +530,7 @@ class Kenzer(object):
     def portscan(self):
         for i in range(2,len(self.content)):
             dtype = False
-            if validators.domain(self.content[i].lower())==True or self.content[i].lower() == "monitor":
+            if validators.domain(self.content[i].lower())==True:
                 dtype = True
             else:
                 try:
@@ -546,7 +551,7 @@ class Kenzer(object):
     def endscan(self):
         for i in range(2,len(self.content)):
             dtype = False
-            if validators.domain(self.content[i].lower())==True or self.content[i].lower() == "monitor":
+            if validators.domain(self.content[i].lower())==True:
                 dtype = True
             else:
                 try:
@@ -630,7 +635,7 @@ class Kenzer(object):
     def vizscan(self):
         for i in range(2,len(self.content)):
             dtype = False
-            if validators.domain(self.content[i].lower())==True or self.content[i].lower() == "monitor":
+            if validators.domain(self.content[i].lower())==True:
                 dtype = True
             else:
                 try:

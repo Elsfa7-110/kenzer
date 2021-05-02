@@ -63,7 +63,7 @@ class Enumerator:
         if(os.path.exists(output)):
             self.shuffsolv(output, domain)
             os.system("rm {0}".format(output))
-        os.system("cat {0}/amass.log {0}/subfinder.log {0}/subenum.kenz* {0}/shuffledns.log {0}/shuffsolv.log {0}/gitdomain.log | sort -u > {1}".format(path, output))
+        os.system("cat {0}/amass.log {0}/subfinder.log {0}/subenum.kenz* {0}/shuffledns.log {0}/shuffsolv.log | sort -u > {1}".format(path, output))
         self.ignorenum()
         if(os.path.exists(output)):
             with open(output, encoding="ISO-8859-1") as f:
@@ -105,7 +105,7 @@ class Enumerator:
         output = path+"/headenum.kenz"
         if(os.path.exists(output)):
             os.system("rm {0}".format(output))
-        extras = " -status-code -title -web-server -websocket -vhost -content-type "
+        extras = " -status-code -title -web-server -websocket -vhost -content-type -cdn "
         self.httpx(subs, output, extras)
         if(os.path.exists(output)):
             with open(output, encoding="ISO-8859-1") as f:
@@ -121,15 +121,12 @@ class Enumerator:
         subs = path+"/webenum.kenz"
         if(os.path.exists(subs) == False):
             return("!webenum")
-        output = path+"/EmailHarvester.log"
-        os.system("EmailHarvester -d {0} -s {1}".format(domain, output))
-        os.system("sed -i -e 's/^/[email] [{0}] /' {1}".format(domain, output))
         output = path+"/rescro.log"
         os.system("rescro -l {0} -s {1} -T 100 -o {2}".format(subs, self.templates+"rescro.yaml", output))
         out = path+"/socenum.kenz"
         if(os.path.exists(out)):
             os.system("mv {0} {0}.old".format(out))
-        os.system("cat {0}/EmailHarvester.log {0}/rescro.log | sort -u  > {1}".format(path, out))
+        os.system("cat {0}/rescro.log | sort -u  > {1}".format(path, out))
         if(os.path.exists(out)):
             with open(out, encoding="ISO-8859-1") as f:
                 line = len(f.readlines())
@@ -147,7 +144,7 @@ class Enumerator:
         output = path+"/urlheadenum.kenz"
         if(os.path.exists(output)):
             os.system("rm {0}".format(output))
-        extras = " -status-code -title -web-server -websocket -vhost -content-type "
+        extras = " -status-code -title -web-server -websocket -vhost -content-type -cdn "
         self.httpx(subs, output, extras)
         if(os.path.exists(output)):
             with open(output, encoding="ISO-8859-1") as f:
@@ -314,7 +311,7 @@ class Enumerator:
         output = path+"/subfinder.log"
         if(os.path.exists(output)):
             os.system("mv {0} {0}.old".format(output))
-        os.system("subfinder -all -recursive -t 50 -max-time 30 -o {0} -v -timeout 20 -d {1}".format(output, domain))
+        os.system("subfinder -all -t 30 -max-time 30 -o {0} -v -timeout 20 -d {1}".format(output, domain))
         return
     
     #enumerates subdomains using amass

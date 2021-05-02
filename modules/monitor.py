@@ -39,6 +39,8 @@ class Monitor:
         self.favscan()
         self.idscan()
         self.cvescan()
+        self.subscan()
+        self.cscan()
         self.vulnscan()
         self.buckscan()
         return
@@ -350,7 +352,69 @@ class Monitor:
             except:
                 continue
         return
-
+    
+    #normalizes subscan
+    def subscan(self):
+        kenzerdb = self.db
+        subscan = self.path+"/subscan.kenz"
+        if(os.path.exists(subscan) == False):
+            return
+        with open(subscan, 'r', encoding="ISO-8859-1") as f:
+            domains = f.readlines()
+        domains=list(set(domains))
+        domains.sort()
+        for data in domains:
+            try:
+                subdomain = data.split(" ")[1]
+                extracted = tldextract.extract(subdomain)
+                domain = "{}.{}".format(extracted.domain, extracted.suffix)
+                destination = kenzerdb+domain
+                if not os.path.exists(destination):
+                    os.makedirs(destination)
+                with open(destination+"/subscan.kenz", 'a', encoding="ISO-8859-1") as f:
+                        f.write(data)
+                os.system("mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/subscan.kenz"))
+                os.system("rm {0}.old".format(destination+"/subscan.kenz"))
+                if(os.path.exists(destination+"/ignorenum.kenz")):
+                    with open(destination+"/ignorenum.kenz", "r") as f:
+                        ignore = f.read().split("/n")
+                    for key in ignore:
+                        os.system("ex +g/{0}/d -cwq {1}".format(key, destination+"/subscan.kenz"))
+            except:
+                continue
+        return
+    
+    #normalizes cscan
+    def cscan(self):
+        kenzerdb = self.db
+        cscan = self.path+"/cscan.kenz"
+        if(os.path.exists(cscan) == False):
+            return
+        with open(cscan, 'r', encoding="ISO-8859-1") as f:
+            domains = f.readlines()
+        domains=list(set(domains))
+        domains.sort()
+        for data in domains:
+            try:
+                subdomain = data.split(" ")[1]
+                extracted = tldextract.extract(subdomain)
+                domain = "{}.{}".format(extracted.domain, extracted.suffix)
+                destination = kenzerdb+domain
+                if not os.path.exists(destination):
+                    os.makedirs(destination)
+                with open(destination+"/cscan.kenz", 'a', encoding="ISO-8859-1") as f:
+                        f.write(data)
+                os.system("mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/cscan.kenz"))
+                os.system("rm {0}.old".format(destination+"/cscan.kenz"))
+                if(os.path.exists(destination+"/ignorenum.kenz")):
+                    with open(destination+"/ignorenum.kenz", "r") as f:
+                        ignore = f.read().split("/n")
+                    for key in ignore:
+                        os.system("ex +g/{0}/d -cwq {1}".format(key, destination+"/cscan.kenz"))
+            except:
+                continue
+        return
+    
     #normalizes cvescan
     def cvescan(self):
         kenzerdb = self.db
