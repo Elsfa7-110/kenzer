@@ -34,6 +34,8 @@ try:
     _uploads=config.get("kenzer", "uploads")
     _subscribe=config.get("kenzer", "subscribe")
     _kenzer=config.get("kenzer", "path")
+    _logging=config.get("kenzer", "logging")
+    _splitting=config.get("kenzer", "splitting")
     _kenzerdb=config.get("kenzerdb", "path")
     _github=config.get("kenzerdb", "token")
     _repo=config.get("kenzerdb", "repo")
@@ -51,7 +53,7 @@ class Kenzer(object):
     
     #initializations
     def __init__(self):
-        print(BLUE+"KENZER[3.18] by ARPSyndicate"+CLEAR)
+        print(BLUE+"KENZER[3.19] by ARPSyndicate"+CLEAR)
         print(YELLOW+"automated web assets enumeration & scanning"+CLEAR)
         self.client = zulip.Client(email=_BotMail, site=_Site, api_key=_APIKey)
         self.upload=False
@@ -67,7 +69,7 @@ class Kenzer(object):
         time.sleep(3)
         self.trainer.train("chatterbot.corpus.english")
         time.sleep(3)
-        self.modules=["monitor", "ignorenum", "subenum", "webenum", "servenum", "urlheadenum", "headenum", "socenum", "conenum", "dnsenum", "portenum", "asnenum", "urlenum", "favscan", "cscan", "idscan", "subscan", "cvescan", "vulnscan", "portscan", "urlcvescan", "urlvulnscan", "endscan", "buckscan", "vizscan", "enum", "scan", "recon", "hunt", "remlog", "sync"]
+        self.modules=["monitor", "ignorenum", "subenum", "webenum", "servenum", "urlheadenum", "headenum", "socenum", "conenum", "dnsenum", "portenum", "asnenum", "urlenum", "favscan", "cscan", "idscan", "subscan", "cvescan", "vulnscan", "portscan", "urlcvescan", "urlvulnscan", "endscan", "buckscan", "vizscan", "enum", "scan", "recon", "hunt", "sync"]
         print(YELLOW+"[*] KENZER is online"+CLEAR)
         print(YELLOW+"[*] {0} modules up & running".format(len(self.modules))+CLEAR)
 
@@ -83,7 +85,7 @@ class Kenzer(object):
 
     #manual
     def man(self):
-        message = "**KENZER[3.18]**\n"
+        message = "**KENZER[3.19]**\n"
         message +="**KENZER modules**\n"
         message +="  `ignorenum` - initializes & removes out of scope targets\n"
         message +="  `subenum` - enumerates subdomains\n"
@@ -113,7 +115,6 @@ class Kenzer(object):
         message +="  `scan` - runs all scanner modules\n"
         message +="  `recon` - runs all modules\n"
         message +="  `hunt` - runs your custom workflow\n"
-        message +="  `remlog` - removes log files\n"
         message +="  `upload` - switches upload functionality\n"
         message +="  `sync` - synchronizes the local kenzerdb with github\n"
         message +="  `upgrade` - upgrades kenzer to latest version\n"
@@ -160,6 +161,52 @@ class Kenzer(object):
             files=[fp],
         )
         self.sendMessage("{0}/{1} : {3}{2}".format(org, raw, uploaded['uri'], _Site))
+        return
+    
+    #removes log files
+    def remlog(self):
+        for i in range(2,len(self.content)):
+            dtype = False
+            if validators.domain(self.content[i].lower())==True or self.content[i].lower() == "monitor":
+                dtype = True
+            else:
+                try:
+                    ipaddress.ip_network(self.content[i])
+                except ValueError:
+                    continue
+            self.enum = enumerator.Enumerator(self.content[i].lower(), _kenzerdb, _kenzer, dtype)
+            message = self.enum.remlog()
+            #self.sendMessage(message)
+        return
+
+    #splits .kenz files
+    def splitkenz(self):
+        for i in range(2,len(self.content)):
+            dtype = False
+            if validators.domain(self.content[i].lower())==True or self.content[i].lower() == "monitor":
+                dtype = True
+            else:
+                try:
+                    ipaddress.ip_network(self.content[i])
+                except ValueError:
+                    continue
+            self.enum = enumerator.Enumerator(self.content[i].lower(), _kenzerdb, _kenzer, dtype)
+            message = self.enum.splitkenz()
+        return
+
+    #merges .kenz files
+    def mergekenz(self):
+        for i in range(2,len(self.content)):
+            dtype = False
+            if validators.domain(self.content[i].lower())==True or self.content[i].lower() == "monitor":
+                dtype = True
+            else:
+                try:
+                    ipaddress.ip_network(self.content[i])
+                except ValueError:
+                    continue
+            self.enum = enumerator.Enumerator(self.content[i].lower(), _kenzerdb, _kenzer, dtype)
+            message = self.enum.mergekenz()
         return
 
     #monitors ct logs
@@ -213,11 +260,16 @@ class Kenzer(object):
                 continue
             self.sendMessage("[subenum - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
             self.enum = enumerator.Enumerator(self.content[i].lower(), _kenzerdb, _kenzer, dtype, _github)
+            self.mergekenz()
             message = self.enum.subenum()
             self.sendMessage("[subenum - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower()))
             if self.upload:
                 file = "subenum.kenz"
                 self.uploader(self.content[i], file)
+            if not _logging:
+                self.remlog()
+            if _splitting:
+                self.splitkenz()
         return
 
     #probes services from enumerated ports
@@ -234,11 +286,16 @@ class Kenzer(object):
                     continue
             self.sendMessage("[servenum - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
             self.enum = enumerator.Enumerator(self.content[i].lower(), _kenzerdb, _kenzer, dtype)
+            self.mergekenz()
             message = self.enum.servenum()
             self.sendMessage("[servenum - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower()))
             if self.upload:
                 file = "servenum.kenz"
                 self.uploader(self.content[i], file)
+            if not _logging:
+                self.remlog()
+            if _splitting:
+                self.splitkenz()
         return
     
     #probes web servers from enumerated ports
@@ -255,11 +312,16 @@ class Kenzer(object):
                     continue
             self.sendMessage("[webenum - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
             self.enum = enumerator.Enumerator(self.content[i].lower(), _kenzerdb, _kenzer, dtype)
+            self.mergekenz()
             message = self.enum.webenum()
             self.sendMessage("[webenum - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower()))
             if self.upload:
                 file = "webenum.kenz"
                 self.uploader(self.content[i], file)
+            if not _logging:
+                self.remlog()
+            if _splitting:
+                self.splitkenz()
         return
     
     #enumerates additional info from webservers
@@ -276,11 +338,16 @@ class Kenzer(object):
                     continue
             self.sendMessage("[headenum - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
             self.enum = enumerator.Enumerator(self.content[i].lower(), _kenzerdb, _kenzer, dtype)
+            self.mergekenz()
             message = self.enum.headenum()
             self.sendMessage("[headenum - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower()))
             if self.upload:
                 file = "headenum.kenz"
                 self.uploader(self.content[i], file)
+            if not _logging:
+                self.remlog()
+            if _splitting:
+                self.splitkenz()
         return
     
     #enumerates additional info from urls
@@ -292,11 +359,16 @@ class Kenzer(object):
                 continue
             self.sendMessage("[urlheadenum - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
             self.enum = enumerator.Enumerator(self.content[i].lower(), _kenzerdb, _kenzer, dtype)
+            self.mergekenz()
             message = self.enum.urlheadenum()
             self.sendMessage("[urlheadenum - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower()))
             if self.upload:
                 file = "urlheadenum.kenz"
                 self.uploader(self.content[i], file)
+            if not _logging:
+                self.remlog()
+            if _splitting:
+                self.splitkenz()
         return
 
     #enumerates dns records
@@ -308,11 +380,16 @@ class Kenzer(object):
                 continue
             self.sendMessage("[dnsenum - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
             self.enum = enumerator.Enumerator(self.content[i].lower(), _kenzerdb, _kenzer, dtype)
+            self.mergekenz()
             message = self.enum.dnsenum()
             self.sendMessage("[dnsenum - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower()))
             if self.upload:
                 file = "dnsenum.kenz"
                 self.uploader(self.content[i], file)
+            if not _logging:
+                self.remlog()
+            if _splitting:
+                self.splitkenz()
         return
 
     #enumerates hidden files & directories
@@ -329,11 +406,16 @@ class Kenzer(object):
                     continue
             self.sendMessage("[conenum - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
             self.enum = enumerator.Enumerator(self.content[i].lower(), _kenzerdb, _kenzer, dtype)
+            self.mergekenz()
             message = self.enum.conenum()
             self.sendMessage("[conenum - #({0}/{1}) ~] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
             if self.upload:
                 file = "conenum.kenz"
                 self.uploader(self.content[i], file)
+            if not _logging:
+                self.remlog()
+            if _splitting:
+                self.splitkenz()
         return
     
     #enumerates asn for enumerated subdomains
@@ -345,11 +427,16 @@ class Kenzer(object):
                 continue
             self.sendMessage("[asnenum - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
             self.enum = enumerator.Enumerator(self.content[i].lower(), _kenzerdb, _kenzer, dtype)
+            self.mergekenz()
             message = self.enum.asnenum()
             self.sendMessage("[asnenum - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower()))
             if self.upload:
                 file = "asnenum.kenz"
                 self.uploader(self.content[i], file)
+            if not _logging:
+                self.remlog()
+            if _splitting:
+                self.splitkenz()
         return
     
     #enumerates open ports
@@ -366,11 +453,16 @@ class Kenzer(object):
                     continue
             self.sendMessage("[portenum - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
             self.enum = enumerator.Enumerator(self.content[i].lower(), _kenzerdb, _kenzer, dtype)
+            self.mergekenz()
             message = self.enum.portenum()
             self.sendMessage("[portenum - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower()))
             if self.upload:
                 file = "portenum.kenz"
                 self.uploader(self.content[i], file)
+            if not _logging:
+                self.remlog()
+            if _splitting:
+                self.splitkenz()
         return
 
     #enumerates urls
@@ -382,11 +474,16 @@ class Kenzer(object):
                 continue
             self.sendMessage("[urlenum - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
             self.enum = enumerator.Enumerator(self.content[i].lower(), _kenzerdb, _kenzer, _github, dtype)
+            self.mergekenz()
             message = self.enum.urlenum()
             self.sendMessage("[urlenum - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower()))
             if self.upload:
                 file = "urlenum.kenz" 
                 self.uploader(self.content[i], file)
+            if not _logging:
+                self.remlog()
+            if _splitting:
+                self.splitkenz()
         return
 
     #hunts for subdomain takeovers
@@ -403,11 +500,16 @@ class Kenzer(object):
                     continue
             self.sendMessage("[subscan - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
             self.scan = scanner.Scanner(self.content[i].lower(), _kenzerdb, dtype, _kenzer)
+            self.mergekenz()
             message = self.scan.subscan()
             self.sendMessage("[subscan - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower()))
             if self.upload:
                 file = "subscan.kenz"
                 self.uploader(self.content[i], file)
+            if not _logging:
+                self.remlog()
+            if _splitting:
+                self.splitkenz()
         return
     
     #enumerates social media accounts 
@@ -424,11 +526,16 @@ class Kenzer(object):
                     continue
             self.sendMessage("[socenum - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
             self.enum = enumerator.Enumerator(self.content[i].lower(), _kenzerdb, _kenzer, dtype)
+            self.mergekenz()
             message = self.enum.socenum()
             self.sendMessage("[socenum - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower()))
             if self.upload:
                 file = "socenum.kenz"
                 self.uploader(self.content[i], file)
+            if not _logging:
+                self.remlog()
+            if _splitting:
+                self.splitkenz()
         return
 
     #scans with customized templates
@@ -445,11 +552,16 @@ class Kenzer(object):
                     continue
             self.sendMessage("[cscan - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
             self.scan = scanner.Scanner(self.content[i].lower(), _kenzerdb, dtype, _kenzer)
+            self.mergekenz()
             message = self.scan.cscan()
             self.sendMessage("[cscan - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower()))
             if self.upload:
                 file = "cscan.kenz"
                 self.uploader(self.content[i], file)
+            if not _logging:
+                self.remlog()
+            if _splitting:
+                self.splitkenz()
         return
         
     #hunts for CVEs
@@ -466,11 +578,16 @@ class Kenzer(object):
                     continue
             self.sendMessage("[cvescan - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
             self.scan = scanner.Scanner(self.content[i].lower(), _kenzerdb, dtype, _kenzer)
+            self.mergekenz()
             message = self.scan.cvescan()
             self.sendMessage("[cvescan - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower()))
             if self.upload:
                 file = "cvescan.kenz"
                 self.uploader(self.content[i], file)
+            if not _logging:
+                self.remlog()
+            if _splitting:
+                self.splitkenz()
         return
     
     #hunts for other common vulnerabilities
@@ -487,11 +604,16 @@ class Kenzer(object):
                     continue
             self.sendMessage("[vulnscan - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
             self.scan = scanner.Scanner(self.content[i].lower(), _kenzerdb, dtype, _kenzer)
+            self.mergekenz()
             message = self.scan.vulnscan()
             self.sendMessage("[vulnscan - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower()))
             if self.upload:
                 file = "vulnscan.kenz"
                 self.uploader(self.content[i], file)
+            if not _logging:
+                self.remlog()
+            if _splitting:
+                self.splitkenz()
         return
 
     #hunts for CVEs in URLs
@@ -503,11 +625,16 @@ class Kenzer(object):
                 continue
             self.sendMessage("[urlcvescan - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
             self.scan = scanner.Scanner(self.content[i].lower(), _kenzerdb, dtype, _kenzer)
+            self.mergekenz()
             message = self.scan.urlcvescan()
             self.sendMessage("[urlcvescan - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower()))
             if self.upload:
                 file = "urlcvescan.kenz"
                 self.uploader(self.content[i], file)
+            if not _logging:
+                self.remlog()
+            if _splitting:
+                self.splitkenz()
         return
     
     #hunts for other common vulnerabilities in URLs
@@ -519,11 +646,16 @@ class Kenzer(object):
                 continue
             self.sendMessage("[urlvulnscan - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
             self.scan = scanner.Scanner(self.content[i].lower(), _kenzerdb, dtype, _kenzer)
+            self.mergekenz()
             message = self.scan.urlvulnscan()
             self.sendMessage("[urlvulnscan - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower()))
             if self.upload:
                 file = "urlvulnscan.kenz"
                 self.uploader(self.content[i], file)
+            if not _logging:
+                self.remlog()
+            if _splitting:
+                self.splitkenz()
         return
 
     #scans open ports
@@ -545,6 +677,8 @@ class Kenzer(object):
             if self.upload:
                 file = "portscan.kenz"
                 self.uploader(self.content[i], file)
+            if not _logging:
+                self.remlog()
         return
     
     #hunts for vulnerablities in custom endpoints
@@ -561,11 +695,16 @@ class Kenzer(object):
                     continue
             self.sendMessage("[endscan - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
             self.scan = scanner.Scanner(self.content[i].lower(), _kenzerdb, dtype, _kenzer)
+            self.mergekenz()
             message = self.scan.endscan()
             self.sendMessage("[endscan - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower()))
             if self.upload:
                 file = "endscan.kenz"
                 self.uploader(self.content[i], file)
+            if not _logging:
+                self.remlog()
+            if _splitting:
+                self.splitkenz()
         return
     
     #hunts for subdomain takeovers
@@ -582,11 +721,16 @@ class Kenzer(object):
                     continue
             self.sendMessage("[buckscan - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
             self.scan = scanner.Scanner(self.content[i].lower(), _kenzerdb, dtype, _kenzer)
+            self.mergekenz()
             message = self.scan.buckscan()
             self.sendMessage("[buckscan - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower()))
             if self.upload:
                 file = "buckscan.kenz"
                 self.uploader(self.content[i], file)
+            if not _logging:
+                self.remlog()
+            if _splitting:
+                self.splitkenz()
         return
 
     #fingerprints servers using favicons
@@ -603,11 +747,16 @@ class Kenzer(object):
                     continue
             self.sendMessage("[favscan - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
             self.scan = scanner.Scanner(self.content[i].lower(), _kenzerdb, dtype, _kenzer)
+            self.mergekenz()
             message = self.scan.favscan()
             self.sendMessage("[favscan - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower()))
             if self.upload:
                 file = "favscan.kenz"
                 self.uploader(self.content[i], file)
+            if not _logging:
+                self.remlog()
+            if _splitting:
+                self.splitkenz()
         return
     
     #identifies applications running on webservers
@@ -624,11 +773,16 @@ class Kenzer(object):
                     continue
             self.sendMessage("[idscan - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
             self.scan = scanner.Scanner(self.content[i].lower(), _kenzerdb, dtype, _kenzer)
+            self.mergekenz()
             message = self.scan.idscan()
             self.sendMessage("[idscan - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower()))
             if self.upload:
                 file = "idscan.kenz"
                 self.uploader(self.content[i], file)
+            if not _logging:
+                self.remlog()
+            if _splitting:
+                self.splitkenz()
         return
     
     #screenshots applications running on webservers
@@ -650,6 +804,8 @@ class Kenzer(object):
             if self.upload:
                 for file in os.listdir(_kenzerdb+self.content[i].lower()+"/aquatone/screenshots/"):
                     self.uploader(self.content[i], "aquatone/screenshots/"+file)
+            if not _logging:
+                self.remlog()
         return
 
     #runs all enumeration modules
@@ -709,7 +865,6 @@ class Kenzer(object):
         #self.urlcvescan()
         #self.urlvulnscan()
         #self.endscan()
-        #self.remlog()
         return
 
     #runs all modules
@@ -728,14 +883,6 @@ class Kenzer(object):
     def upgrade(self):
         os.system("bash update.sh")
         self.sendMessage("[upgraded]")
-        return
-
-    #removes old log files
-    def remlog(self):
-        for i in range(2,len(self.content)):
-            self.enum = enumerator.Enumerator(self.content[i].lower(), _kenzerdb, _kenzer, dtype)
-            message = self.enum.remlog()
-            self.sendMessage(message)
         return
 
     #controls
@@ -820,8 +967,6 @@ class Kenzer(object):
                     self.hunt()
                 elif content[1].lower() == "recon":
                     self.recon()
-                elif content[1].lower() == "remlog":
-                    self.remlog()
                 elif content[1].lower() == "sync":
                     self.sync()
                 elif content[1].lower() == "upgrade":

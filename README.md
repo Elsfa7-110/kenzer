@@ -51,7 +51,6 @@
 >* `scan` - runs all scanner modules
 >* `recon` - runs all modules
 >* `hunt` - runs your custom workflow
->* `remlog` - removes log files
 >* `upload` - switches upload functionality
 >* `upgrade` - upgrades kenzer to latest version
 >* `monitor` - monitors ct logs for new subdomains

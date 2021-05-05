@@ -26,7 +26,10 @@ class Enumerator:
         domain = self.domain
         path = self.path
         output =path+"/ignorenum.kenz"
-        files = ["/subenum.kenz", "/webenum.kenz", "/portenum.kenz", "/urlenum.kenz", "/servenum.kenz"]
+        files = []
+        for x in os.listdir(path):
+            if x.endswith(".kenz") and x != "ignorenum.kenz":
+                files.append(x)
         ignores = []
         if(len(ignore)>0):
             ignores.append(ignore)
@@ -44,8 +47,8 @@ class Enumerator:
                 ignores = f.read().split("/n")
             for key in ignores:
                 for file in files:
-                    if(os.path.exists(path+file)):
-                        os.system("ex +g/{0}/d -cwq {1}".format(key, path+file))
+                    if(os.path.exists(path+"/"+file)):
+                        os.system("ex +g/{0}/d -cwq {1}".format(key, path+"/"+file))
                 with open(output, encoding="ISO-8859-1") as f:
                     line = len(f.readlines())
         else:
@@ -63,7 +66,7 @@ class Enumerator:
         if(os.path.exists(output)):
             self.shuffsolv(output, domain)
             os.system("rm {0}".format(output))
-        os.system("cat {0}/amass.log {0}/subfinder.log {0}/subenum.kenz* {0}/shuffledns.log {0}/shuffsolv.log | sort -u > {1}".format(path, output))
+        os.system("cat {0}/amass.log {0}/subfinder.log {0}/subenum.kenz {0}/shuffledns.log {0}/shuffsolv.log | sort -u > {1}".format(path, output))
         self.ignorenum()
         if(os.path.exists(output)):
             with open(output, encoding="ISO-8859-1") as f:
@@ -86,7 +89,7 @@ class Enumerator:
         output = path+"/webenum.kenz"
         if(os.path.exists(output)):
             os.system("mv {0} {0}.old".format(output))
-        os.system("cat {0}/httpx.log {0}/webenum.kenz* | cut -d' ' -f 1 | sort -u > {1}".format(path, output))
+        os.system("cat {0}/httpx.log {0}/webenum.kenz | cut -d' ' -f 1 | sort -u > {1}".format(path, output))
         self.ignorenum()
         if(os.path.exists(output)):
             with open(output, encoding="ISO-8859-1") as f:
@@ -163,7 +166,7 @@ class Enumerator:
         output = path+"/urlenum.kenz"
         if(os.path.exists(output)):
             os.system("mv {0} {0}.old".format(output))
-        os.system("cat {0}/urlenum.kenz* {0}/gau.log {0}/giturl.log {0}/gospider.log | grep \"{2}\" | sort -u> {1}".format(path, output, domain))
+        os.system("cat {0}/urlenum.kenz {0}/gau.log {0}/giturl.log {0}/gospider.log | grep \"{2}\" | sort -u> {1}".format(path, output, domain))
         self.ignorenum()
         if(os.path.exists(output)):
             with open(output, encoding="ISO-8859-1") as f:
@@ -191,7 +194,7 @@ class Enumerator:
             os.system("echo {0} > {1}".format(domain, subs))
             os.system("sudo NXScan --only-enumerate -l {0} -o {1}".format(subs,path+"/nxscan"))
             os.system("rm {0}".format(subs))
-        os.system("cat {0}/nxscan/enum.txt {0}/portenum.kenz* | sort -u > {1}".format(path, output))
+        os.system("cat {0}/nxscan/enum.txt {0}/portenum.kenz | sort -u > {1}".format(path, output))
         self.ignorenum()
         if(os.path.exists(output)):
             with open(output, encoding="ISO-8859-1") as f:
@@ -209,7 +212,7 @@ class Enumerator:
             return("!portenum")
         output = path+"/servenum.kenz"
         os.system("sudo NXScan --only-finger -l {0} -o {1}".format(subs,path+"/nxscan"))
-        os.system("cat {0}/nxscan/finger.txt {0}/servenum.kenz* | sort -u > {1}".format(path, output))
+        os.system("cat {0}/nxscan/finger.txt {0}/servenum.kenz | sort -u > {1}".format(path, output))
         self.ignorenum()
         if(os.path.exists(output)):
             with open(output, encoding="ISO-8859-1") as f:
@@ -378,5 +381,32 @@ class Enumerator:
     #removes log files & empty files
     def remlog(self):
         os.system("rm {0}/*.log*".format(self.path))
+        os.system("rm {0}/*.old*".format(self.path))
         os.system("rm -r {0}/nuclei {0}/jaeles {0}/passive-jaeles {0}/nxscan {0}/gocrawler".format(self.path))
         os.system("find {0} -type f -empty -delete".format(self.path))
+        return
+
+    #splits files greater than 90mb
+    def splitkenz(self):
+        domain = self.domain
+        path = self.path
+        files = []
+        for x in os.listdir(path):
+            if x.endswith(".kenz") and x not in ["ignorenum.kenz", "portscan.kenz"]:
+                files.append(x)
+        for file in files:
+            fil = path+file
+            if os.stat(fil).st_size > 90000:
+                os.system("split -b 90M {0} {0}. -d".format(fil))
+                os.system("rm {0}. -d".format(fil))
+        return
+    
+    #merges files if necessary
+    def mergekenz(self):
+        domain = self.domain
+        path = self.path
+        files = []
+        for x in os.listdir(path):
+            if x.endswith(".kenz")==False and x.contains(".kenz."):
+                os.system("cat {0}.kenz.* | sort -u > {0}".format(x.split(".")[0]))
+        return
