@@ -398,7 +398,7 @@ class Enumerator:
             fil = path+"/"+file
             if os.stat(fil).st_size > 90000:
                 os.system("split -b 90M {0} {0}. -d".format(fil))
-                os.system("rm {0}. -d".format(fil))
+                os.system("rm {0}".format(fil))
         return
     
     #merges files if necessary
