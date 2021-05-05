@@ -266,9 +266,9 @@ class Kenzer(object):
             if self.upload:
                 file = "subenum.kenz"
                 self.uploader(self.content[i], file)
-            if not _logging:
+            if _logging=="False":
                 self.remlog()
-            if _splitting:
+            if _splitting=="True":
                 self.splitkenz()
         return
 
@@ -292,9 +292,9 @@ class Kenzer(object):
             if self.upload:
                 file = "servenum.kenz"
                 self.uploader(self.content[i], file)
-            if not _logging:
+            if _logging=="False":
                 self.remlog()
-            if _splitting:
+            if _splitting=="True":
                 self.splitkenz()
         return
     
@@ -318,9 +318,9 @@ class Kenzer(object):
             if self.upload:
                 file = "webenum.kenz"
                 self.uploader(self.content[i], file)
-            if not _logging:
+            if _logging=="False":
                 self.remlog()
-            if _splitting:
+            if _splitting=="True":
                 self.splitkenz()
         return
     
@@ -344,9 +344,9 @@ class Kenzer(object):
             if self.upload:
                 file = "headenum.kenz"
                 self.uploader(self.content[i], file)
-            if not _logging:
+            if _logging=="False":
                 self.remlog()
-            if _splitting:
+            if _splitting=="True":
                 self.splitkenz()
         return
     
@@ -365,9 +365,9 @@ class Kenzer(object):
             if self.upload:
                 file = "urlheadenum.kenz"
                 self.uploader(self.content[i], file)
-            if not _logging:
+            if _logging=="False":
                 self.remlog()
-            if _splitting:
+            if _splitting=="True":
                 self.splitkenz()
         return
 
@@ -386,9 +386,9 @@ class Kenzer(object):
             if self.upload:
                 file = "dnsenum.kenz"
                 self.uploader(self.content[i], file)
-            if not _logging:
+            if _logging=="False":
                 self.remlog()
-            if _splitting:
+            if _splitting=="True":
                 self.splitkenz()
         return
 
@@ -412,9 +412,9 @@ class Kenzer(object):
             if self.upload:
                 file = "conenum.kenz"
                 self.uploader(self.content[i], file)
-            if not _logging:
+            if _logging=="False":
                 self.remlog()
-            if _splitting:
+            if _splitting=="True":
                 self.splitkenz()
         return
     
@@ -433,9 +433,9 @@ class Kenzer(object):
             if self.upload:
                 file = "asnenum.kenz"
                 self.uploader(self.content[i], file)
-            if not _logging:
+            if _logging=="False":
                 self.remlog()
-            if _splitting:
+            if _splitting=="True":
                 self.splitkenz()
         return
     
@@ -459,9 +459,9 @@ class Kenzer(object):
             if self.upload:
                 file = "portenum.kenz"
                 self.uploader(self.content[i], file)
-            if not _logging:
+            if _logging=="False":
                 self.remlog()
-            if _splitting:
+            if _splitting=="True":
                 self.splitkenz()
         return
 
@@ -480,9 +480,9 @@ class Kenzer(object):
             if self.upload:
                 file = "urlenum.kenz" 
                 self.uploader(self.content[i], file)
-            if not _logging:
+            if _logging=="False":
                 self.remlog()
-            if _splitting:
+            if _splitting=="True":
                 self.splitkenz()
         return
 
@@ -506,9 +506,9 @@ class Kenzer(object):
             if self.upload:
                 file = "subscan.kenz"
                 self.uploader(self.content[i], file)
-            if not _logging:
+            if _logging=="False":
                 self.remlog()
-            if _splitting:
+            if _splitting=="True":
                 self.splitkenz()
         return
     
@@ -532,9 +532,9 @@ class Kenzer(object):
             if self.upload:
                 file = "socenum.kenz"
                 self.uploader(self.content[i], file)
-            if not _logging:
+            if _logging=="False":
                 self.remlog()
-            if _splitting:
+            if _splitting=="True":
                 self.splitkenz()
         return
 
@@ -558,9 +558,9 @@ class Kenzer(object):
             if self.upload:
                 file = "cscan.kenz"
                 self.uploader(self.content[i], file)
-            if not _logging:
+            if _logging=="False":
                 self.remlog()
-            if _splitting:
+            if _splitting=="True":
                 self.splitkenz()
         return
         
@@ -584,9 +584,9 @@ class Kenzer(object):
             if self.upload:
                 file = "cvescan.kenz"
                 self.uploader(self.content[i], file)
-            if not _logging:
+            if _logging=="False":
                 self.remlog()
-            if _splitting:
+            if _splitting=="True":
                 self.splitkenz()
         return
     
@@ -610,9 +610,9 @@ class Kenzer(object):
             if self.upload:
                 file = "vulnscan.kenz"
                 self.uploader(self.content[i], file)
-            if not _logging:
+            if _logging=="False":
                 self.remlog()
-            if _splitting:
+            if _splitting=="True":
                 self.splitkenz()
         return
 
@@ -631,9 +631,9 @@ class Kenzer(object):
             if self.upload:
                 file = "urlcvescan.kenz"
                 self.uploader(self.content[i], file)
-            if not _logging:
+            if _logging=="False":
                 self.remlog()
-            if _splitting:
+            if _splitting=="True":
                 self.splitkenz()
         return
     
@@ -652,9 +652,9 @@ class Kenzer(object):
             if self.upload:
                 file = "urlvulnscan.kenz"
                 self.uploader(self.content[i], file)
-            if not _logging:
+            if _logging=="False":
                 self.remlog()
-            if _splitting:
+            if _splitting=="True":
                 self.splitkenz()
         return
 
@@ -677,7 +677,7 @@ class Kenzer(object):
             if self.upload:
                 file = "portscan.kenz"
                 self.uploader(self.content[i], file)
-            if not _logging:
+            if _logging=="False":
                 self.remlog()
         return
     
@@ -701,9 +701,9 @@ class Kenzer(object):
             if self.upload:
                 file = "endscan.kenz"
                 self.uploader(self.content[i], file)
-            if not _logging:
+            if _logging=="False":
                 self.remlog()
-            if _splitting:
+            if _splitting=="True":
                 self.splitkenz()
         return
     
@@ -727,9 +727,9 @@ class Kenzer(object):
             if self.upload:
                 file = "buckscan.kenz"
                 self.uploader(self.content[i], file)
-            if not _logging:
+            if _logging=="False":
                 self.remlog()
-            if _splitting:
+            if _splitting=="True":
                 self.splitkenz()
         return
 
@@ -753,9 +753,9 @@ class Kenzer(object):
             if self.upload:
                 file = "favscan.kenz"
                 self.uploader(self.content[i], file)
-            if not _logging:
+            if _logging=="False":
                 self.remlog()
-            if _splitting:
+            if _splitting=="True":
                 self.splitkenz()
         return
     
@@ -779,9 +779,9 @@ class Kenzer(object):
             if self.upload:
                 file = "idscan.kenz"
                 self.uploader(self.content[i], file)
-            if not _logging:
+            if _logging=="False":
                 self.remlog()
-            if _splitting:
+            if _splitting=="True":
                 self.splitkenz()
         return
     
@@ -804,7 +804,7 @@ class Kenzer(object):
             if self.upload:
                 for file in os.listdir(_kenzerdb+self.content[i].lower()+"/aquatone/screenshots/"):
                     self.uploader(self.content[i], "aquatone/screenshots/"+file)
-            if not _logging:
+            if _logging=="False":
                 self.remlog()
         return
 
