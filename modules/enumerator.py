@@ -395,7 +395,7 @@ class Enumerator:
             if x.endswith(".kenz") and x not in ["ignorenum.kenz", "portscan.kenz"]:
                 files.append(x)
         for file in files:
-            fil = path+file
+            fil = path+"/"+file
             if os.stat(fil).st_size > 90000:
                 os.system("split -b 90M {0} {0}. -d".format(fil))
                 os.system("rm {0}. -d".format(fil))
@@ -408,5 +408,5 @@ class Enumerator:
         files = []
         for x in os.listdir(path):
             if x.endswith(".kenz")==False and x.contains(".kenz."):
-                os.system("cat {0}.kenz.* | sort -u > {0}".format(x.split(".")[0]))
+                os.system("cat {1}/{0}.kenz.* | sort -u > {0}".format(x.split(".")[0], path))
         return
