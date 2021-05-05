@@ -407,6 +407,6 @@ class Enumerator:
         path = self.path
         files = []
         for x in os.listdir(path):
-            if x.endswith(".kenz")==False and x.contains(".kenz."):
+            if x.endswith(".kenz")==False and ".kenz." in x:
                 os.system("cat {1}/{0}.kenz.* | sort -u > {0}".format(x.split(".")[0], path))
         return
