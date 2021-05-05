@@ -55,7 +55,7 @@
 >* `upgrade` - upgrades kenzer to latest version
 >* `monitor` - monitors ct logs for new subdomains
 >* `monitor normalize` - normalizes the enumerations from ct logs
->* `monitor db` - monitors ct logs for kenzerdb's domains.txt
+>* `monitor db` - monitors ct logs for kenzerdb's targets.txt
 >* `sync` - synchronizes the local kenzerdb with github
 >* `kenzer <module>` - runs a specific modules
 >* `kenzer man` - shows this manual

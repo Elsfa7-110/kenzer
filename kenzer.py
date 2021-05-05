@@ -120,7 +120,7 @@ class Kenzer(object):
         message +="  `upgrade` - upgrades kenzer to latest version\n"
         message +="  `monitor` - monitors ct logs for new subdomains\n"
         message +="  `monitor normalize` - normalizes the enumerations from ct logs\n"
-        message +="  `monitor db` - monitors ct logs for kenzerdb's domains.txt\n"
+        message +="  `monitor db` - monitors ct logs for kenzerdb's targets.txt\n"
         message +="`kenzer <module>` - runs a specific modules\n"
         message +="`kenzer man` - shows this manual\n"
         message +="or you can just interact with chatterbot\n"
@@ -216,9 +216,9 @@ class Kenzer(object):
         self.monitor.certex()
         return
     
-    #monitors ct logs for kenzerdb's domains.txt
+    #monitors ct logs for kenzerdb's targets.txt
     def monitor_kenzerdb(self):
-        domfile = _kenzerdb+"../domains.txt"
+        domfile = _kenzerdb+"../targets.txt"
         with open(domfile) as f:
             line = len(f.readlines())
         self.sendMessage("[monitoring - #({0})]".format(line))
