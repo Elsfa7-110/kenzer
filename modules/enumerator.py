@@ -392,11 +392,11 @@ class Enumerator:
         path = self.path
         files = []
         for x in os.listdir(path):
-            if x.endswith(".kenz") and x not in ["ignorenum.kenz", "portscan.kenz"]:
+            if x.endswith(".kenz") and x not in ["ignorenum.kenz", "portscan.kenz", "vizscan.kenz"]:
                 files.append(x)
         for file in files:
             fil = path+"/"+file
-            if os.stat(fil).st_size > 90000:
+            if os.stat(fil).st_size > 90000000:
                 os.system("split -b 90M {0} {0}. -d".format(fil))
                 os.system("rm {0}".format(fil))
         return
