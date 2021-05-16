@@ -34,7 +34,7 @@ class Scanner:
     def jaeles(self, template, hosts, output):
         severity = ""
         if len(self.severity)>0:
-            severity = +self.severity
+            severity = self.severity
         os.system("jaeles scan --retry 2 --no-background -c 50 --rootDir {3}jaeles/ -s {3}jaeles/{0}/{5} --timeout 10 -U {1} -O {2} -o {4}/jaeles --no-db --chunk true ".format(template, hosts, output, self.templates, self.path, self.severity))
         return
 
