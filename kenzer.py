@@ -550,6 +550,7 @@ class Kenzer(object):
                 except ValueError:
                     self.sendMessage("[invalid] {0}".format(self.content[i].lower()))    
                     continue
+            display=""
             if(len(severity)>0):
                display = "({0})".format(severity)
             self.sendMessage("[cscan{3} - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower(), display))
@@ -578,6 +579,7 @@ class Kenzer(object):
                 except ValueError:
                     self.sendMessage("[invalid] {0}".format(self.content[i].lower()))    
                     continue
+            display=""
             if(len(severity)>0):
                display = "({0})".format(severity)
             self.sendMessage("[cvescan{3} - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower(), display))
@@ -606,6 +608,7 @@ class Kenzer(object):
                 except ValueError:
                     self.sendMessage("[invalid] {0}".format(self.content[i].lower()))    
                     continue
+            display=""
             if(len(severity)>0):
                display = "({0})".format(severity)
             self.sendMessage("[vulnscan{3} - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower(), display))
@@ -629,6 +632,7 @@ class Kenzer(object):
             if(validators.domain(self.content[i].lower())!= True):
                 self.sendMessage("[invalid] {0}".format(self.content[i].lower()))
                 continue
+            display=""
             if(len(severity)>0):
                display = "({0})".format(severity)
             self.sendMessage("[urlcvescan{3} - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower(), display))
@@ -652,6 +656,7 @@ class Kenzer(object):
             if(validators.domain(self.content[i].lower())!= True):
                 self.sendMessage("[invalid] {0}".format(self.content[i].lower()))
                 continue
+            display=""
             if(len(severity)>0):
                display = "({0})".format(severity)
             self.sendMessage("[urlvulnscan{3} - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower(), display))
@@ -703,6 +708,7 @@ class Kenzer(object):
                 except ValueError:
                     self.sendMessage("[invalid] {0}".format(self.content[i].lower()))    
                     continue
+            display=""
             if(len(severity)>0):
                display = "({0})".format(severity)
             self.sendMessage("[endscan{3} - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower(), display))
