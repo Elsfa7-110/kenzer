@@ -53,7 +53,7 @@ class Kenzer(object):
     
     #initializations
     def __init__(self):
-        print(BLUE+"KENZER[3.19] by ARPSyndicate"+CLEAR)
+        print(BLUE+"KENZER[3.20] by ARPSyndicate"+CLEAR)
         print(YELLOW+"automated web assets enumeration & scanning"+CLEAR)
         self.client = zulip.Client(email=_BotMail, site=_Site, api_key=_APIKey)
         self.upload=False
@@ -85,7 +85,7 @@ class Kenzer(object):
 
     #manual
     def man(self):
-        message = "**KENZER[3.19]**\n"
+        message = "**KENZER[3.20]**\n"
         message +="**KENZER modules**\n"
         message +="  `ignorenum` - initializes & removes out of scope targets\n"
         message +="  `subenum` - enumerates subdomains\n"
@@ -100,13 +100,13 @@ class Kenzer(object):
         message +="  `urlenum` - enumerates urls\n"
         message +="  `subscan` - hunts for subdomain takeovers\n"
         message +="  `socenum` - enumerates social media accounts\n"
-        message +="  `cscan` - scan with customized templates\n"
-        message +="  `cvescan` - hunts for CVEs\n"
-        message +="  `vulnscan` - hunts for other common vulnerabilites\n"
-        message +="  `urlcvescan` - hunts for CVEs in urls\n"
-        message +="  `urlvulnscan` - hunts for other common vulnerabilitesin urls\n"
+        message +="  `cscan[-[critical|high|medium|low|info|[custom]]]` - scan with customized templates\n"
+        message +="  `cvescan[-[critical|high|medium|low|info|[custom]]]` - hunts for CVEs\n"
+        message +="  `vulnscan[-[critical|high|medium|low|info|[custom]]]` - hunts for other common vulnerabilites\n"
+        message +="  `urlcvescan[-[critical|high|medium|low|info|[custom]]]` - hunts for CVEs in urls\n"
+        message +="  `urlvulnscan[-[critical|high|medium|low|info|[custom]]]` - hunts for other common vulnerabilitesin urls\n"
         message +="  `portscan` - scans open ports\n"
-        message +="  `endscan` - hunts for vulnerablities in custom endpoints\n"
+        message +="  `endscan[-[critical|high|medium|low|info|[custom]]]` - hunts for vulnerablities in custom endpoints\n"
         message +="  `buckscan` - hunts for unreferenced aws s3 buckets\n"
         message +="  `favscan` - fingerprints webservers using favicon\n"
         message +="  `idscan` - identifies applications running on webservers\n"
@@ -539,7 +539,7 @@ class Kenzer(object):
         return
 
     #scans with customized templates
-    def cscan(self):
+    def cscan(self, severity=""):
         for i in range(2,len(self.content)):
             dtype = False
             if validators.domain(self.content[i].lower())==True or self.content[i].lower() == "monitor":
@@ -550,11 +550,13 @@ class Kenzer(object):
                 except ValueError:
                     self.sendMessage("[invalid] {0}".format(self.content[i].lower()))    
                     continue
-            self.sendMessage("[cscan - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
-            self.scan = scanner.Scanner(self.content[i].lower(), _kenzerdb, dtype, _kenzer)
+            if(len(severity)>0):
+               display = "({0})".format(severity)
+            self.sendMessage("[cscan{3} - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower(), display))
+            self.scan = scanner.Scanner(self.content[i].lower(), _kenzerdb, dtype, _kenzer, severity)
             self.mergekenz()
             message = self.scan.cscan()
-            self.sendMessage("[cscan - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower()))
+            self.sendMessage("[cscan{4} - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower(), display))
             if self.upload:
                 file = "cscan.kenz"
                 self.uploader(self.content[i], file)
@@ -565,7 +567,7 @@ class Kenzer(object):
         return
         
     #hunts for CVEs
-    def cvescan(self):
+    def cvescan(self, severity=""):
         for i in range(2,len(self.content)):
             dtype = False
             if validators.domain(self.content[i].lower())==True or self.content[i].lower() == "monitor":
@@ -576,11 +578,13 @@ class Kenzer(object):
                 except ValueError:
                     self.sendMessage("[invalid] {0}".format(self.content[i].lower()))    
                     continue
-            self.sendMessage("[cvescan - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
-            self.scan = scanner.Scanner(self.content[i].lower(), _kenzerdb, dtype, _kenzer)
+            if(len(severity)>0):
+               display = "({0})".format(severity)
+            self.sendMessage("[cvescan{3} - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower(), display))
+            self.scan = scanner.Scanner(self.content[i].lower(), _kenzerdb, dtype, _kenzer, severity)
             self.mergekenz()
             message = self.scan.cvescan()
-            self.sendMessage("[cvescan - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower()))
+            self.sendMessage("[cvescan{4} - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower(), display))
             if self.upload:
                 file = "cvescan.kenz"
                 self.uploader(self.content[i], file)
@@ -591,7 +595,7 @@ class Kenzer(object):
         return
     
     #hunts for other common vulnerabilities
-    def vulnscan(self):
+    def vulnscan(self, severity=""):
         for i in range(2,len(self.content)):
             dtype = False
             if validators.domain(self.content[i].lower())==True or self.content[i].lower() == "monitor":
@@ -602,11 +606,13 @@ class Kenzer(object):
                 except ValueError:
                     self.sendMessage("[invalid] {0}".format(self.content[i].lower()))    
                     continue
-            self.sendMessage("[vulnscan - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
-            self.scan = scanner.Scanner(self.content[i].lower(), _kenzerdb, dtype, _kenzer)
+            if(len(severity)>0):
+               display = "({0})".format(severity)
+            self.sendMessage("[vulnscan{3} - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower(), display))
+            self.scan = scanner.Scanner(self.content[i].lower(), _kenzerdb, dtype, _kenzer, severity)
             self.mergekenz()
             message = self.scan.vulnscan()
-            self.sendMessage("[vulnscan - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower()))
+            self.sendMessage("[vulnscan{4} - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower(), display))
             if self.upload:
                 file = "vulnscan.kenz"
                 self.uploader(self.content[i], file)
@@ -617,17 +623,19 @@ class Kenzer(object):
         return
 
     #hunts for CVEs in URLs
-    def urlcvescan(self):
+    def urlcvescan(self, severity=""):
         for i in range(2,len(self.content)):
             dtype = True
             if(validators.domain(self.content[i].lower())!= True):
                 self.sendMessage("[invalid] {0}".format(self.content[i].lower()))
                 continue
-            self.sendMessage("[urlcvescan - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
-            self.scan = scanner.Scanner(self.content[i].lower(), _kenzerdb, dtype, _kenzer)
+            if(len(severity)>0):
+               display = "({0})".format(severity)
+            self.sendMessage("[urlcvescan{3} - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower(), display))
+            self.scan = scanner.Scanner(self.content[i].lower(), _kenzerdb, dtype, _kenzer, severity)
             self.mergekenz()
             message = self.scan.urlcvescan()
-            self.sendMessage("[urlcvescan - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower()))
+            self.sendMessage("[urlcvescan{4} - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower(), display))
             if self.upload:
                 file = "urlcvescan.kenz"
                 self.uploader(self.content[i], file)
@@ -638,17 +646,19 @@ class Kenzer(object):
         return
     
     #hunts for other common vulnerabilities in URLs
-    def urlvulnscan(self):
+    def urlvulnscan(self, severity=""):
         for i in range(2,len(self.content)):
             dtype = True
             if(validators.domain(self.content[i].lower())!= True):
                 self.sendMessage("[invalid] {0}".format(self.content[i].lower()))
                 continue
-            self.sendMessage("[urlvulnscan - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
-            self.scan = scanner.Scanner(self.content[i].lower(), _kenzerdb, dtype, _kenzer)
+            if(len(severity)>0):
+               display = "({0})".format(severity)
+            self.sendMessage("[urlvulnscan{3} - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower(), display))
+            self.scan = scanner.Scanner(self.content[i].lower(), _kenzerdb, dtype, _kenzer, severity)
             self.mergekenz()
             message = self.scan.urlvulnscan()
-            self.sendMessage("[urlvulnscan - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower()))
+            self.sendMessage("[urlvulnscan{4} - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower(), display))
             if self.upload:
                 file = "urlvulnscan.kenz"
                 self.uploader(self.content[i], file)
@@ -682,7 +692,7 @@ class Kenzer(object):
         return
     
     #hunts for vulnerablities in custom endpoints
-    def endscan(self):
+    def endscan(self, severity=""):
         for i in range(2,len(self.content)):
             dtype = False
             if validators.domain(self.content[i].lower())==True:
@@ -693,11 +703,13 @@ class Kenzer(object):
                 except ValueError:
                     self.sendMessage("[invalid] {0}".format(self.content[i].lower()))    
                     continue
-            self.sendMessage("[endscan - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower()))
-            self.scan = scanner.Scanner(self.content[i].lower(), _kenzerdb, dtype, _kenzer)
+            if(len(severity)>0):
+               display = "({0})".format(severity)
+            self.sendMessage("[endscan{3} - #({0}/{1})] {2}".format(i-1, len(self.content)-2, self.content[i].lower(), display))
+            self.scan = scanner.Scanner(self.content[i].lower(), _kenzerdb, dtype, _kenzer, severity)
             self.mergekenz()
             message = self.scan.endscan()
-            self.sendMessage("[endscan - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower()))
+            self.sendMessage("[endscan{4} - #({0}/{1}) - {2}] {3}".format(i-1, len(self.content)-2, message, self.content[i].lower(), display))
             if self.upload:
                 file = "endscan.kenz"
                 self.uploader(self.content[i], file)
@@ -939,20 +951,38 @@ class Kenzer(object):
                     self.urlenum()
                 elif content[1].lower() == "subscan":
                     self.subscan()
-                elif content[1].lower() == "cscan":
-                    self.cscan()
-                elif content[1].lower() == "cvescan":
-                    self.cvescan()
-                elif content[1].lower() == "vulnscan":
-                    self.vulnscan()
-                elif content[1].lower() == "urlcvescan":
-                    self.urlcvescan()
-                elif content[1].lower() == "urlvulnscan":
-                    self.urlvulnscan()
+                elif content[1].split("-")[0].lower() == "cscan":
+                    if len(content[1].split("-"))>1:
+                        self.cscan(content[1].split("-")[1].lower())
+                    else:
+                        self.cscan()
+                elif content[1].split("-")[0].lower() == "cvescan":
+                    if len(content[1].split("-"))>1:
+                        self.cvescan(content[1].split("-")[1].lower())
+                    else:
+                        self.cvescan()
+                elif content[1].split("-")[0].lower() == "vulnscan":
+                    if len(content[1].split("-"))>1:
+                        self.vulnscan(content[1].split("-")[1].lower())
+                    else:
+                        self.vulnscan()
+                elif content[1].split("-")[0].lower() == "urlcvescan":
+                    if len(content[1].split("-"))>1:
+                        self.urlcvescan(content[1].split("-")[1].lower())
+                    else:
+                        self.urlcvescan()
+                elif content[1].split("-")[0].lower() == "urlvulnscan":
+                    if len(content[1].split("-"))>1:
+                        self.urlvulnscan(content[1].split("-")[1].lower())
+                    else:
+                        self.urlvulnscan()
                 elif content[1].lower() == "portscan":
                     self.portscan()
-                elif content[1].lower() == "endscan":
-                    self.endscan()
+                elif content[1].split("-")[0].lower() == "endscan":
+                    if len(content[1].split("-"))>1:
+                        self.endscan(content[1].split("-")[1].lower())
+                    else:
+                        self.endscan()
                 elif content[1].lower() == "idscan":
                     self.idscan()
                 elif content[1].lower() == "vizscan":

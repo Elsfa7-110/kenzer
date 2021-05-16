@@ -36,13 +36,13 @@
 >* `urlenum` - enumerates urls
 >* `socenum` - enumerates social media accounts
 >* `subscan` - hunts for subdomain takeovers
->* `cscan` - scan with customized templates
->* `cvescan` - hunts for CVEs
->* `vulnscan` - hunts for other common vulnerabilites
->* `urlcvescan` - hunts for CVEs in URLs
->* `urlvulnscan` - hunts for other common vulnerabilites in URLs
+>* `cscan[-[critical|high|medium|low|info|[custom]]]` - scan with customized templates
+>* `cvescan[-[critical|high|medium|low|info|[custom]]]` - hunts for CVEs
+>* `vulnscan[-[critical|high|medium|low|info|[custom]]]` - hunts for other common vulnerabilites
+>* `urlcvescan[-[critical|high|medium|low|info|[custom]]]` - hunts for CVEs in URLs
+>* `urlvulnscan[-[critical|high|medium|low|info|[custom]]]` - hunts for other common vulnerabilites in URLs
 >* `portscan` - scans open ports
->* `endscan` - hunts for vulnerablities in custom endpoints
+>* `endscan[-[critical|high|medium|low|info|[custom]]]` - hunts for vulnerablities in custom endpoints
 >* `buckscan` - hunts for unreferenced aws s3 buckets
 >* `favscan` - fingerprints webservers using favicon
 >* `vizscan` - screenshots applications running on webservers

@@ -6,9 +6,10 @@ import time
 class Scanner:
     
     #initializations
-    def __init__(self, domain, db, dtype, kenzer):
+    def __init__(self, domain, db, dtype, kenzer, severity=""):
         self.domain = domain
         self.organization = domain
+        self.severity = severity
         if dtype:
             self.path = db+self.organization
         else:
@@ -23,12 +24,18 @@ class Scanner:
 
     #runs nuclei
     def nuclei(self, template, hosts, output):
-        os.system("nuclei -project -project-path {4}/nuclei -stats -retries 2 -bulk-size 100 -rate-limit 50 -t {3}nuclei/{0} -timeout 10 -l {1} -o {2}".format(template, hosts, output, self.templates, self.path))
+        severity = ""
+        if len(self.severity)>0:
+            severity = "/"+self.severity
+        os.system("nuclei -project -project-path {4}/nuclei -stats -retries 2 -bulk-size 100 -rate-limit 50 -t {3}nuclei/{0}{5} -timeout 10 -l {1} -o {2}".format(template, hosts, output, self.templates, self.path, severity))
         return
     
     #runs jaeles
     def jaeles(self, template, hosts, output):
-        os.system("jaeles scan --retry 2 --no-background -c 50 --rootDir {3}jaeles/ -s {3}jaeles/{0}/ --timeout 10 -U {1} -O {2} -o {4}/jaeles --no-db --chunk true ".format(template, hosts, output, self.templates, self.path))
+        severity = ""
+        if len(self.severity)>0:
+            severity = +self.severity
+        os.system("jaeles scan --retry 2 --no-background -c 50 --rootDir {3}jaeles/ -s {3}jaeles/{0}/{5} --timeout 10 -U {1} -O {2} -o {4}/jaeles --no-db --chunk true ".format(template, hosts, output, self.templates, self.path, self.severity))
         return
 
     #core modules
