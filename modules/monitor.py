@@ -1,11 +1,13 @@
-#imports
+# imports
 import os
 import tldextract
 
-#monitor
+# monitor
+
+
 class Monitor:
-    
-    #initializations
+
+    # initializations
     def __init__(self, db, domains=""):
         self.domains = domains
         self.organization = "monitor"
@@ -14,20 +16,21 @@ class Monitor:
         if(os.path.exists(self.path) == False):
             os.system("mkdir "+self.path)
 
-    #core monitor modules
-    
-    #enumerates subdomains using certex
+    # core monitor modules
+
+    # enumerates subdomains using certex
     def certex(self):
         domains = self.domains
         path = self.path
         output = path+"/subenum.kenz"
-        if len(domains)==0:
-            os.system("certex -f {0} -o {1} &".format(self.db+"../targets.txt", output))
+        if len(domains) == 0:
+            os.system(
+                "certex -f {0} -o {1} &".format(self.db+"../targets.txt", output))
         else:
             os.system("certex -d {0} -o {1} &".format(domains, output))
         return
 
-    #normalizes enumerations
+    # normalizes enumerations
     def normalize(self):
         self.subenum()
         self.portenum()
@@ -45,7 +48,7 @@ class Monitor:
         self.buckscan()
         return
 
-    #normalizes subenum
+    # normalizes subenum
     def subenum(self):
         kenzerdb = self.db
         subenum = self.path+"/subenum.kenz"
@@ -53,7 +56,7 @@ class Monitor:
             return
         with open(subenum, 'r', encoding="ISO-8859-1") as f:
             domains = f.readlines()
-        domains=list(set(domains))
+        domains = list(set(domains))
         domains.sort()
         for subdomain in domains:
             try:
@@ -63,19 +66,21 @@ class Monitor:
                 if not os.path.exists(destination):
                     os.makedirs(destination)
                 with open(destination+"/subenum.kenz", 'a', encoding="ISO-8859-1") as f:
-                        f.write(subdomain)
-                os.system("mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/subenum.kenz"))
+                    f.write(subdomain)
+                os.system(
+                    "mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/subenum.kenz"))
                 os.system("rm {0}.old".format(destination+"/subenum.kenz"))
                 if(os.path.exists(destination+"/ignorenum.kenz")):
                     with open(destination+"/ignorenum.kenz", "r") as f:
                         ignore = f.read().split("/n")
                     for key in ignore:
-                        os.system("ex +g/{0}/d -cwq {1}".format(key, destination+"/subenum.kenz"))
+                        os.system(
+                            "ex +g/{0}/d -cwq {1}".format(key, destination+"/subenum.kenz"))
             except:
                 continue
         return
 
-    #normalizes portenum
+    # normalizes portenum
     def portenum(self):
         kenzerdb = self.db
         portenum = self.path+"/portenum.kenz"
@@ -83,7 +88,7 @@ class Monitor:
             return
         with open(portenum, 'r', encoding="ISO-8859-1") as f:
             domains = f.readlines()
-        domains=list(set(domains))
+        domains = list(set(domains))
         domains.sort()
         for subdomain in domains:
             try:
@@ -93,19 +98,21 @@ class Monitor:
                 if not os.path.exists(destination):
                     os.makedirs(destination)
                 with open(destination+"/portenum.kenz", 'a', encoding="ISO-8859-1") as f:
-                        f.write(subdomain)
-                os.system("mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/portenum.kenz"))
+                    f.write(subdomain)
+                os.system(
+                    "mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/portenum.kenz"))
                 os.system("rm {0}.old".format(destination+"/portenum.kenz"))
                 if(os.path.exists(destination+"/ignorenum.kenz")):
                     with open(destination+"/ignorenum.kenz", "r") as f:
                         ignore = f.read().split("/n")
                     for key in ignore:
-                        os.system("ex +g/{0}/d -cwq {1}".format(key, destination+"/portenum.kenz"))
+                        os.system(
+                            "ex +g/{0}/d -cwq {1}".format(key, destination+"/portenum.kenz"))
             except:
                 continue
         return
 
-    #normalizes webenum
+    # normalizes webenum
     def webenum(self):
         kenzerdb = self.db
         webenum = self.path+"/webenum.kenz"
@@ -113,7 +120,7 @@ class Monitor:
             return
         with open(webenum, 'r', encoding="ISO-8859-1") as f:
             domains = f.readlines()
-        domains=list(set(domains))
+        domains = list(set(domains))
         domains.sort()
         for subdomain in domains:
             try:
@@ -123,19 +130,21 @@ class Monitor:
                 if not os.path.exists(destination):
                     os.makedirs(destination)
                 with open(destination+"/webenum.kenz", 'a', encoding="ISO-8859-1") as f:
-                        f.write(subdomain)
-                os.system("mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/webenum.kenz"))
+                    f.write(subdomain)
+                os.system(
+                    "mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/webenum.kenz"))
                 os.system("rm {0}.old".format(destination+"/webenum.kenz"))
                 if(os.path.exists(destination+"/ignorenum.kenz")):
                     with open(destination+"/ignorenum.kenz", "r") as f:
                         ignore = f.read().split("/n")
                     for key in ignore:
-                        os.system("ex +g/{0}/d -cwq {1}".format(key, destination+"/webenum.kenz"))
+                        os.system(
+                            "ex +g/{0}/d -cwq {1}".format(key, destination+"/webenum.kenz"))
             except:
                 continue
         return
-    
-    #normalizes headenum
+
+    # normalizes headenum
     def headenum(self):
         kenzerdb = self.db
         headenum = self.path+"/headenum.kenz"
@@ -143,7 +152,7 @@ class Monitor:
             return
         with open(headenum, 'r', encoding="ISO-8859-1") as f:
             domains = f.readlines()
-        domains=list(set(domains))
+        domains = list(set(domains))
         domains.sort()
         for data in domains:
             try:
@@ -154,19 +163,21 @@ class Monitor:
                 if not os.path.exists(destination):
                     os.makedirs(destination)
                 with open(destination+"/headenum.kenz", 'a', encoding="ISO-8859-1") as f:
-                        f.write(data)
-                os.system("mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/headenum.kenz"))
+                    f.write(data)
+                os.system(
+                    "mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/headenum.kenz"))
                 os.system("rm {0}.old".format(destination+"/headenum.kenz"))
                 if(os.path.exists(destination+"/ignorenum.kenz")):
                     with open(destination+"/ignorenum.kenz", "r") as f:
                         ignore = f.read().split("/n")
                     for key in ignore:
-                        os.system("ex +g/{0}/d -cwq {1}".format(key, destination+"/headenum.kenz"))
+                        os.system(
+                            "ex +g/{0}/d -cwq {1}".format(key, destination+"/headenum.kenz"))
             except:
                 continue
         return
-    
-    #normalizes asnenum
+
+    # normalizes asnenum
     def asnenum(self):
         kenzerdb = self.db
         asnenum = self.path+"/asnenum.kenz"
@@ -174,7 +185,7 @@ class Monitor:
             return
         with open(asnenum, 'r', encoding="ISO-8859-1") as f:
             domains = f.readlines()
-        domains=list(set(domains))
+        domains = list(set(domains))
         domains.sort()
         for data in domains:
             try:
@@ -185,19 +196,21 @@ class Monitor:
                 if not os.path.exists(destination):
                     os.makedirs(destination)
                 with open(destination+"/asnenum.kenz", 'a', encoding="ISO-8859-1") as f:
-                        f.write(data)
-                os.system("mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/asnenum.kenz"))
+                    f.write(data)
+                os.system(
+                    "mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/asnenum.kenz"))
                 os.system("rm {0}.old".format(destination+"/asnenum.kenz"))
                 if(os.path.exists(destination+"/ignorenum.kenz")):
                     with open(destination+"/ignorenum.kenz", "r") as f:
                         ignore = f.read().split("/n")
                     for key in ignore:
-                        os.system("ex +g/{0}/d -cwq {1}".format(key, destination+"/asnenum.kenz"))
+                        os.system(
+                            "ex +g/{0}/d -cwq {1}".format(key, destination+"/asnenum.kenz"))
             except:
                 continue
         return
 
-    #normalizes dnsenum
+    # normalizes dnsenum
     def dnsenum(self):
         kenzerdb = self.db
         dnsenum = self.path+"/dnsenum.kenz"
@@ -205,7 +218,7 @@ class Monitor:
             return
         with open(dnsenum, 'r', encoding="ISO-8859-1") as f:
             domains = f.readlines()
-        domains=list(set(domains))
+        domains = list(set(domains))
         domains.sort()
         for data in domains:
             try:
@@ -216,20 +229,22 @@ class Monitor:
                 if not os.path.exists(destination):
                     os.makedirs(destination)
                 with open(destination+"/dnsenum.kenz", 'a', encoding="ISO-8859-1") as f:
-                        f.write(data)
-                os.system("mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/dnsenum.kenz"))
+                    f.write(data)
+                os.system(
+                    "mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/dnsenum.kenz"))
                 os.system("rm {0}.old".format(destination+"/dnsenum.kenz"))
                 if(os.path.exists(destination+"/ignorenum.kenz")):
                     with open(destination+"/ignorenum.kenz", "r") as f:
                         ignore = f.read().split("/n")
                     for key in ignore:
-                        os.system("ex +g/{0}/d -cwq {1}".format(key, destination+"/dnsenum.kenz"))
+                        os.system(
+                            "ex +g/{0}/d -cwq {1}".format(key, destination+"/dnsenum.kenz"))
             except:
                 continue
         return
-    
 
-    #normalizes favscan
+    # normalizes favscan
+
     def favscan(self):
         kenzerdb = self.db
         favscan = self.path+"/favscan.kenz"
@@ -237,7 +252,7 @@ class Monitor:
             return
         with open(favscan, 'r', encoding="ISO-8859-1") as f:
             domains = f.readlines()
-        domains=list(set(domains))
+        domains = list(set(domains))
         domains.sort()
         for data in domains:
             try:
@@ -248,19 +263,21 @@ class Monitor:
                 if not os.path.exists(destination):
                     os.makedirs(destination)
                 with open(destination+"/favscan.kenz", 'a', encoding="ISO-8859-1") as f:
-                        f.write(data)
-                os.system("mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/favscan.kenz"))
+                    f.write(data)
+                os.system(
+                    "mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/favscan.kenz"))
                 os.system("rm {0}.old".format(destination+"/favscan.kenz"))
                 if(os.path.exists(destination+"/ignorenum.kenz")):
                     with open(destination+"/ignorenum.kenz", "r") as f:
                         ignore = f.read().split("/n")
                     for key in ignore:
-                        os.system("ex +g/{0}/d -cwq {1}".format(key, destination+"/favscan.kenz"))
+                        os.system(
+                            "ex +g/{0}/d -cwq {1}".format(key, destination+"/favscan.kenz"))
             except:
                 continue
         return
 
-    #normalizes servenum
+    # normalizes servenum
     def servenum(self):
         kenzerdb = self.db
         servenum = self.path+"/servenum.kenz"
@@ -268,7 +285,7 @@ class Monitor:
             return
         with open(servenum, 'r', encoding="ISO-8859-1") as f:
             domains = f.readlines()
-        domains=list(set(domains))
+        domains = list(set(domains))
         domains.sort()
         for data in domains:
             try:
@@ -279,19 +296,21 @@ class Monitor:
                 if not os.path.exists(destination):
                     os.makedirs(destination)
                 with open(destination+"/servenum.kenz", 'a', encoding="ISO-8859-1") as f:
-                        f.write(data)
-                os.system("mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/servenum.kenz"))
+                    f.write(data)
+                os.system(
+                    "mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/servenum.kenz"))
                 os.system("rm {0}.old".format(destination+"/servenum.kenz"))
                 if(os.path.exists(destination+"/ignorenum.kenz")):
                     with open(destination+"/ignorenum.kenz", "r") as f:
                         ignore = f.read().split("/n")
                     for key in ignore:
-                        os.system("ex +g/{0}/d -cwq {1}".format(key, destination+"/servenum.kenz"))
+                        os.system(
+                            "ex +g/{0}/d -cwq {1}".format(key, destination+"/servenum.kenz"))
             except:
                 continue
         return
-    
-    #normalizes idscan
+
+    # normalizes idscan
     def idscan(self):
         kenzerdb = self.db
         idscan = self.path+"/idscan.kenz"
@@ -299,7 +318,7 @@ class Monitor:
             return
         with open(idscan, 'r', encoding="ISO-8859-1") as f:
             domains = f.readlines()
-        domains=list(set(domains))
+        domains = list(set(domains))
         domains.sort()
         for data in domains:
             try:
@@ -310,19 +329,21 @@ class Monitor:
                 if not os.path.exists(destination):
                     os.makedirs(destination)
                 with open(destination+"/idscan.kenz", 'a', encoding="ISO-8859-1") as f:
-                        f.write(data)
-                os.system("mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/idscan.kenz"))
+                    f.write(data)
+                os.system(
+                    "mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/idscan.kenz"))
                 os.system("rm {0}.old".format(destination+"/idscan.kenz"))
                 if(os.path.exists(destination+"/ignorenum.kenz")):
                     with open(destination+"/ignorenum.kenz", "r") as f:
                         ignore = f.read().split("/n")
                     for key in ignore:
-                        os.system("ex +g/{0}/d -cwq {1}".format(key, destination+"/idscan.kenz"))
+                        os.system(
+                            "ex +g/{0}/d -cwq {1}".format(key, destination+"/idscan.kenz"))
             except:
                 continue
         return
 
-    #normalizes vulnscan
+    # normalizes vulnscan
     def vulnscan(self):
         kenzerdb = self.db
         vulnscan = self.path+"/vulnscan.kenz"
@@ -330,7 +351,7 @@ class Monitor:
             return
         with open(vulnscan, 'r', encoding="ISO-8859-1") as f:
             domains = f.readlines()
-        domains=list(set(domains))
+        domains = list(set(domains))
         domains.sort()
         for data in domains:
             try:
@@ -341,19 +362,21 @@ class Monitor:
                 if not os.path.exists(destination):
                     os.makedirs(destination)
                 with open(destination+"/vulnscan.kenz", 'a', encoding="ISO-8859-1") as f:
-                        f.write(data)
-                os.system("mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/vulnscan.kenz"))
+                    f.write(data)
+                os.system(
+                    "mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/vulnscan.kenz"))
                 os.system("rm {0}.old".format(destination+"/vulnscan.kenz"))
                 if(os.path.exists(destination+"/ignorenum.kenz")):
                     with open(destination+"/ignorenum.kenz", "r") as f:
                         ignore = f.read().split("/n")
                     for key in ignore:
-                        os.system("ex +g/{0}/d -cwq {1}".format(key, destination+"/vulnscan.kenz"))
+                        os.system(
+                            "ex +g/{0}/d -cwq {1}".format(key, destination+"/vulnscan.kenz"))
             except:
                 continue
         return
-    
-    #normalizes subscan
+
+    # normalizes subscan
     def subscan(self):
         kenzerdb = self.db
         subscan = self.path+"/subscan.kenz"
@@ -361,7 +384,7 @@ class Monitor:
             return
         with open(subscan, 'r', encoding="ISO-8859-1") as f:
             domains = f.readlines()
-        domains=list(set(domains))
+        domains = list(set(domains))
         domains.sort()
         for data in domains:
             try:
@@ -372,19 +395,21 @@ class Monitor:
                 if not os.path.exists(destination):
                     os.makedirs(destination)
                 with open(destination+"/subscan.kenz", 'a', encoding="ISO-8859-1") as f:
-                        f.write(data)
-                os.system("mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/subscan.kenz"))
+                    f.write(data)
+                os.system(
+                    "mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/subscan.kenz"))
                 os.system("rm {0}.old".format(destination+"/subscan.kenz"))
                 if(os.path.exists(destination+"/ignorenum.kenz")):
                     with open(destination+"/ignorenum.kenz", "r") as f:
                         ignore = f.read().split("/n")
                     for key in ignore:
-                        os.system("ex +g/{0}/d -cwq {1}".format(key, destination+"/subscan.kenz"))
+                        os.system(
+                            "ex +g/{0}/d -cwq {1}".format(key, destination+"/subscan.kenz"))
             except:
                 continue
         return
-    
-    #normalizes cscan
+
+    # normalizes cscan
     def cscan(self):
         kenzerdb = self.db
         cscan = self.path+"/cscan.kenz"
@@ -392,7 +417,7 @@ class Monitor:
             return
         with open(cscan, 'r', encoding="ISO-8859-1") as f:
             domains = f.readlines()
-        domains=list(set(domains))
+        domains = list(set(domains))
         domains.sort()
         for data in domains:
             try:
@@ -403,19 +428,21 @@ class Monitor:
                 if not os.path.exists(destination):
                     os.makedirs(destination)
                 with open(destination+"/cscan.kenz", 'a', encoding="ISO-8859-1") as f:
-                        f.write(data)
-                os.system("mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/cscan.kenz"))
+                    f.write(data)
+                os.system(
+                    "mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/cscan.kenz"))
                 os.system("rm {0}.old".format(destination+"/cscan.kenz"))
                 if(os.path.exists(destination+"/ignorenum.kenz")):
                     with open(destination+"/ignorenum.kenz", "r") as f:
                         ignore = f.read().split("/n")
                     for key in ignore:
-                        os.system("ex +g/{0}/d -cwq {1}".format(key, destination+"/cscan.kenz"))
+                        os.system(
+                            "ex +g/{0}/d -cwq {1}".format(key, destination+"/cscan.kenz"))
             except:
                 continue
         return
-    
-    #normalizes cvescan
+
+    # normalizes cvescan
     def cvescan(self):
         kenzerdb = self.db
         cvescan = self.path+"/cvescan.kenz"
@@ -423,7 +450,7 @@ class Monitor:
             return
         with open(cvescan, 'r', encoding="ISO-8859-1") as f:
             domains = f.readlines()
-        domains=list(set(domains))
+        domains = list(set(domains))
         domains.sort()
         for data in domains:
             try:
@@ -434,19 +461,21 @@ class Monitor:
                 if not os.path.exists(destination):
                     os.makedirs(destination)
                 with open(destination+"/cvescan.kenz", 'a', encoding="ISO-8859-1") as f:
-                        f.write(data)
-                os.system("mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/cvescan.kenz"))
+                    f.write(data)
+                os.system(
+                    "mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/cvescan.kenz"))
                 os.system("rm {0}.old".format(destination+"/cvescan.kenz"))
                 if(os.path.exists(destination+"/ignorenum.kenz")):
                     with open(destination+"/ignorenum.kenz", "r") as f:
                         ignore = f.read().split("/n")
                     for key in ignore:
-                        os.system("ex +g/{0}/d -cwq {1}".format(key, destination+"/cvescan.kenz"))
+                        os.system(
+                            "ex +g/{0}/d -cwq {1}".format(key, destination+"/cvescan.kenz"))
             except:
                 continue
         return
 
-    #normalizes buckscan
+    # normalizes buckscan
     def buckscan(self):
         kenzerdb = self.db
         buckscan = self.path+"/buckscan.kenz"
@@ -454,7 +483,7 @@ class Monitor:
             return
         with open(buckscan, 'r', encoding="ISO-8859-1") as f:
             domains = f.readlines()
-        domains=list(set(domains))
+        domains = list(set(domains))
         domains.sort()
         for data in domains:
             try:
@@ -466,13 +495,15 @@ class Monitor:
                     os.makedirs(destination)
                 with open(destination+"/buckscan.kenz", 'a', encoding="ISO-8859-1") as f:
                     f.write(data)
-                os.system("mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/buckscan.kenz"))
+                os.system(
+                    "mv {0} {0}.old && sort -u {0}.old > {0}".format(destination+"/buckscan.kenz"))
                 os.system("rm {0}.old".format(destination+"/buckscan.kenz"))
                 if(os.path.exists(destination+"/ignorenum.kenz")):
                     with open(destination+"/ignorenum.kenz", "r") as f:
                         ignore = f.read().split("/n")
                     for key in ignore:
-                        os.system("ex +g/{0}/d -cwq {1}".format(key, destination+"/buckscan.kenz"))
+                        os.system(
+                            "ex +g/{0}/d -cwq {1}".format(key, destination+"/buckscan.kenz"))
             except:
                 continue
         return

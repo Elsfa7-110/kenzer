@@ -55,7 +55,7 @@ class Kenzer(object):
 
     # initializations
     def __init__(self):
-        print(BLUE+"KENZER[3.21] by ARPSyndicate"+CLEAR)
+        print(BLUE+"KENZER[3.22] by ARPSyndicate"+CLEAR)
         print(YELLOW+"automated web assets enumeration & scanning"+CLEAR)
         self.client = zulip.Client(email=_BotMail, site=_Site, api_key=_APIKey)
         self.upload = False
@@ -89,7 +89,7 @@ class Kenzer(object):
 
     # manual
     def man(self):
-        message = "**KENZER[3.21]**\n"
+        message = "**KENZER[3.22]**\n"
         message += "**KENZER modules**\n"
         message += "  `ignorenum` - initializes & removes out of scope targets\n"
         message += "  `subenum` - enumerates subdomains\n"
@@ -169,20 +169,18 @@ class Kenzer(object):
         return
 
     # removes log files
-    def remlog(self):
-        for i in range(2, len(self.content)):
-            dtype = False
-            if validators.domain(self.content[i].lower()) == True or self.content[i].lower() == "monitor":
-                dtype = True
-            else:
-                try:
-                    ipaddress.ip_network(self.content[i])
-                except ValueError:
-                    continue
-            self.enum = enumerator.Enumerator(
-                self.content[i].lower(), _kenzerdb, _kenzer, dtype)
-            message = self.enum.remlog()
-            # self.sendMessage(message)
+    def remlog(self, cont):
+        dtype = False
+        if validators.domain(cont.lower()) == True or cont.lower() == "monitor":
+            dtype = True
+        else:
+            try:
+                ipaddress.ip_network(cont)
+            except ValueError:
+                return
+        self.enum = enumerator.Enumerator(
+            cont.lower(), _kenzerdb, _kenzer, dtype)
+        message = self.enum.remlog()
         return
 
     # splits .kenz files
@@ -281,7 +279,7 @@ class Kenzer(object):
                 file = "subenum.kenz"
                 self.uploader(self.content[i], file)
             if _logging == "False":
-                self.remlog()
+                self.remlog(self.content[i].lower())
             if _splitting == "True":
                 self.splitkenz(self.content[i].lower())
         return
@@ -311,7 +309,7 @@ class Kenzer(object):
                 file = "servenum.kenz"
                 self.uploader(self.content[i], file)
             if _logging == "False":
-                self.remlog()
+                self.remlog(self.content[i].lower())
             if _splitting == "True":
                 self.splitkenz(self.content[i].lower())
         return
@@ -341,7 +339,7 @@ class Kenzer(object):
                 file = "webenum.kenz"
                 self.uploader(self.content[i], file)
             if _logging == "False":
-                self.remlog()
+                self.remlog(self.content[i].lower())
             if _splitting == "True":
                 self.splitkenz(self.content[i].lower())
         return
@@ -371,7 +369,7 @@ class Kenzer(object):
                 file = "headenum.kenz"
                 self.uploader(self.content[i], file)
             if _logging == "False":
-                self.remlog()
+                self.remlog(self.content[i].lower())
             if _splitting == "True":
                 self.splitkenz(self.content[i].lower())
         return
@@ -396,7 +394,7 @@ class Kenzer(object):
                 file = "urlheadenum.kenz"
                 self.uploader(self.content[i], file)
             if _logging == "False":
-                self.remlog()
+                self.remlog(self.content[i].lower())
             if _splitting == "True":
                 self.splitkenz(self.content[i].lower())
         return
@@ -421,7 +419,7 @@ class Kenzer(object):
                 file = "dnsenum.kenz"
                 self.uploader(self.content[i], file)
             if _logging == "False":
-                self.remlog()
+                self.remlog(self.content[i].lower())
             if _splitting == "True":
                 self.splitkenz(self.content[i].lower())
         return
@@ -451,7 +449,7 @@ class Kenzer(object):
                 file = "conenum.kenz"
                 self.uploader(self.content[i], file)
             if _logging == "False":
-                self.remlog()
+                self.remlog(self.content[i].lower())
             if _splitting == "True":
                 self.splitkenz(self.content[i].lower())
         return
@@ -476,7 +474,7 @@ class Kenzer(object):
                 file = "asnenum.kenz"
                 self.uploader(self.content[i], file)
             if _logging == "False":
-                self.remlog()
+                self.remlog(self.content[i].lower())
             if _splitting == "True":
                 self.splitkenz(self.content[i].lower())
         return
@@ -506,7 +504,7 @@ class Kenzer(object):
                 file = "portenum.kenz"
                 self.uploader(self.content[i], file)
             if _logging == "False":
-                self.remlog()
+                self.remlog(self.content[i].lower())
             if _splitting == "True":
                 self.splitkenz(self.content[i].lower())
         return
@@ -531,7 +529,7 @@ class Kenzer(object):
                 file = "urlenum.kenz"
                 self.uploader(self.content[i], file)
             if _logging == "False":
-                self.remlog()
+                self.remlog(self.content[i].lower())
             if _splitting == "True":
                 self.splitkenz(self.content[i].lower())
         return
@@ -561,7 +559,7 @@ class Kenzer(object):
                 file = "subscan.kenz"
                 self.uploader(self.content[i], file)
             if _logging == "False":
-                self.remlog()
+                self.remlog(self.content[i].lower())
             if _splitting == "True":
                 self.splitkenz(self.content[i].lower())
         return
@@ -591,7 +589,7 @@ class Kenzer(object):
                 file = "socenum.kenz"
                 self.uploader(self.content[i], file)
             if _logging == "False":
-                self.remlog()
+                self.remlog(self.content[i].lower())
             if _splitting == "True":
                 self.splitkenz(self.content[i].lower())
         return
@@ -624,7 +622,7 @@ class Kenzer(object):
                 file = "cscan.kenz"
                 self.uploader(self.content[i], file)
             if _logging == "False":
-                self.remlog()
+                self.remlog(self.content[i].lower())
             if _splitting == "True":
                 self.splitkenz(self.content[i].lower())
         return
@@ -657,7 +655,7 @@ class Kenzer(object):
                 file = "cvescan.kenz"
                 self.uploader(self.content[i], file)
             if _logging == "False":
-                self.remlog()
+                self.remlog(self.content[i].lower())
             if _splitting == "True":
                 self.splitkenz(self.content[i].lower())
         return
@@ -690,7 +688,7 @@ class Kenzer(object):
                 file = "vulnscan.kenz"
                 self.uploader(self.content[i], file)
             if _logging == "False":
-                self.remlog()
+                self.remlog(self.content[i].lower())
             if _splitting == "True":
                 self.splitkenz(self.content[i].lower())
         return
@@ -718,7 +716,7 @@ class Kenzer(object):
                 file = "urlcvescan.kenz"
                 self.uploader(self.content[i], file)
             if _logging == "False":
-                self.remlog()
+                self.remlog(self.content[i].lower())
             if _splitting == "True":
                 self.splitkenz(self.content[i].lower())
         return
@@ -746,7 +744,7 @@ class Kenzer(object):
                 file = "urlvulnscan.kenz"
                 self.uploader(self.content[i], file)
             if _logging == "False":
-                self.remlog()
+                self.remlog(self.content[i].lower())
             if _splitting == "True":
                 self.splitkenz(self.content[i].lower())
         return
@@ -775,7 +773,7 @@ class Kenzer(object):
                 file = "portscan.kenz"
                 self.uploader(self.content[i], file)
             if _logging == "False":
-                self.remlog()
+                self.remlog(self.content[i].lower())
         return
 
     # hunts for vulnerablities in custom endpoints
@@ -806,7 +804,7 @@ class Kenzer(object):
                 file = "endscan.kenz"
                 self.uploader(self.content[i], file)
             if _logging == "False":
-                self.remlog()
+                self.remlog(self.content[i].lower())
             if _splitting == "True":
                 self.splitkenz(self.content[i].lower())
         return
@@ -836,7 +834,7 @@ class Kenzer(object):
                 file = "buckscan.kenz"
                 self.uploader(self.content[i], file)
             if _logging == "False":
-                self.remlog()
+                self.remlog(self.content[i].lower())
             if _splitting == "True":
                 self.splitkenz(self.content[i].lower())
         return
@@ -866,7 +864,7 @@ class Kenzer(object):
                 file = "favscan.kenz"
                 self.uploader(self.content[i], file)
             if _logging == "False":
-                self.remlog()
+                self.remlog(self.content[i].lower())
             if _splitting == "True":
                 self.splitkenz(self.content[i].lower())
         return
@@ -896,7 +894,7 @@ class Kenzer(object):
                 file = "idscan.kenz"
                 self.uploader(self.content[i], file)
             if _logging == "False":
-                self.remlog()
+                self.remlog(self.content[i].lower())
             if _splitting == "True":
                 self.splitkenz(self.content[i].lower())
         return
@@ -926,7 +924,7 @@ class Kenzer(object):
                     self.uploader(self.content[i],
                                   "aquatone/screenshots/"+file)
             if _logging == "False":
-                self.remlog()
+                self.remlog(self.content[i].lower())
         return
 
     # runs all enumeration modules
